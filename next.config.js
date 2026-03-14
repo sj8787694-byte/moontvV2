@@ -10,6 +10,7 @@ const nextConfig = {
   output: 'standalone',
   reactStrictMode: false,
 
+  turbopack: {},
   // 不写 experimental.turbo，也不报 invalid key
   // Turbopack 默认启用，无需额外配置
 
