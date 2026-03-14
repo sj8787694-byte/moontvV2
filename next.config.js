@@ -1,52 +1,58 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
-  register: true,
-  skipWaiting: true,
-});
-
+/* eslint-disable @typescript-eslint/no-var-requires */
 const nextConfig = {
   output: 'standalone',
+  eslint: {
+    dirs: ['src'],
+  },
+
   reactStrictMode: false,
+  swcMinify: true,
 
-  // 明确添加空 turbopack 配置，避免 Turbopack + webpack 冲突
-  turbopack: {},
-
+  // Uncoment to add domain whitelist
   images: {
     unoptimized: true,
     remotePatterns: [
-      { protocol: 'https', hostname: '**' },
-      { protocol: 'http', hostname: '**' },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
     ],
   },
 
   webpack(config) {
-    // SVG 处理
-    const fileLoaderRule = config.module.rules.find(
-      (rule) => rule.test?.test?.('.svg')
+    // Grab the existing rule that handles SVG imports
+    const fileLoaderRule = config.module.rules.find((rule) =>
+      rule.test?.test?.('.svg')
     );
 
-    if (fileLoaderRule) {
-      config.module.rules.push(
-        {
-          ...fileLoaderRule,
-          test: /\.svg$/i,
-          resourceQuery: /url/, // *.svg?url -> URL
+    config.module.rules.push(
+      // Reapply the existing rule, but only for svg imports ending in ?url
+      {
+        ...fileLoaderRule,
+        test: /\.svg$/i,
+        resourceQuery: /url/, // *.svg?url
+      },
+      // Convert all other *.svg imports to React components
+      {
+        test: /\.svg$/i,
+        issuer: { not: /\.(css|scss|sass)$/ },
+        resourceQuery: { not: /url/ }, // exclude if *.svg?url
+        loader: '@svgr/webpack',
+        options: {
+          dimensions: false,
+          titleProp: true,
         },
-        {
-          test: /\.svg$/i,
-          issuer: { not: /\.(css|scss|sass)$/ },
-          resourceQuery: { not: /url/ }, // 转成 React 组件
-          loader: '@svgr/webpack',
-          options: { dimensions: false, titleProp: true },
-        }
-      );
+      }
+    );
 
-      fileLoaderRule.exclude = /\.svg$/i;
-    }
+    // Modify the file loader rule to ignore *.svg, since we have it handled now.
+    fileLoaderRule.exclude = /\.svg$/i;
 
-    // Node 内置模块 polyfill（浏览器安全）
     config.resolve.fallback = {
       ...config.resolve.fallback,
       net: false,
@@ -57,5 +63,12 @@ const nextConfig = {
     return config;
   },
 };
+
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  register: true,
+  skipWaiting: true,
+});
 
 module.exports = withPWA(nextConfig);

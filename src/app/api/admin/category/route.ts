@@ -4,9 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { getAuthInfoFromCookie } from '@/lib/auth';
 import { getConfig } from '@/lib/config';
-import { db } from '@/lib/db';
+import { getStorage } from '@/lib/db';
+import { IStorage } from '@/lib/types';
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 
 // 支持的操作类型
 type Action = 'add' | 'disable' | 'enable' | 'delete' | 'sort';
@@ -21,6 +22,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: '不支持本地存储进行管理员配置',
+      },
+      { status: 400 }
+    );
+  }
+  if (storageType === 'd1' || storageType === 'upstash') {
+    return NextResponse.json(
+      {
+        error: 'D1 和 Upstash 实例请通过配置文件调整',
       },
       { status: 400 }
     );
@@ -44,13 +53,14 @@ export async function POST(request: NextRequest) {
 
     // 获取配置与存储
     const adminConfig = await getConfig();
+    const storage: IStorage | null = getStorage();
 
     // 权限与身份校验
     if (username !== process.env.USERNAME) {
       const userEntry = adminConfig.UserConfig.Users.find(
         (u) => u.username === username
       );
-      if (!userEntry || userEntry.role !== 'admin' || userEntry.banned) {
+      if (!userEntry || userEntry.role !== 'admin') {
         return NextResponse.json({ error: '权限不足' }, { status: 401 });
       }
     }
@@ -174,7 +184,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 持久化到存储
-    await db.saveAdminConfig(adminConfig);
+    if (storage && typeof (storage as any).setAdminConfig === 'function') {
+      await (storage as any).setAdminConfig(adminConfig);
+    }
 
     return NextResponse.json(
       { ok: true },
