@@ -10,9 +10,8 @@ const nextConfig = {
   output: 'standalone',
   reactStrictMode: false,
 
+  // 明确添加空 turbopack 配置，避免 Turbopack + webpack 冲突
   turbopack: {},
-  // 不写 experimental.turbo，也不报 invalid key
-  // Turbopack 默认启用，无需额外配置
 
   images: {
     unoptimized: true,
@@ -22,7 +21,7 @@ const nextConfig = {
     ],
   },
 
-  webpack(config, { isServer }) {
+  webpack(config) {
     // SVG 处理
     const fileLoaderRule = config.module.rules.find(
       (rule) => rule.test?.test?.('.svg')
