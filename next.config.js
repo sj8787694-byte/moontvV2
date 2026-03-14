@@ -11,7 +11,6 @@ const nextConfig = {
   reactStrictMode: false,
 
   experimental: {
-    turbo: false, // 关闭 Turbopack，使用 Webpack
   },
 
   images: {
