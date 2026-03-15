@@ -1,5 +1,84 @@
 {
     "cache_time": 9200,
+    {
+  "custom_category": [
+    {
+      "name": "华语电影",
+      "type": "movie",
+      "query": "华语"
+    },
+       {
+      "name": "伦理电影",
+      "type": "movie",
+      "query": "伦理"
+    },       {
+      "name": "三级电影",
+      "type": "movie",
+      "query": "三级"
+    },    {
+      "name": "成人",
+      "type": "movie",
+      "query": "成人"
+    },       {
+      "name": "福利",
+      "type": "movie",
+      "query": "福利"
+    },
+    {
+      "name": "欧美电影",
+      "type": "movie",
+      "query": "欧美"
+    },   {
+      "name": "AV",
+      "type": "movie",
+      "query": "AV"
+    },  {
+      "name": "麻豆",
+      "type": "movie",
+      "query": "麻豆"
+    },
+    {
+      "name": "日本电影",
+      "type": "movie",
+      "query": "日本"
+    },
+    {
+      "name": "韩国电影",
+      "type": "movie",
+      "query": "韩国"
+    },
+    {
+      "name": "国产剧",
+      "type": "tv",
+      "query": "国产"
+    },
+    {
+      "name": "韩剧",
+      "type": "tv",
+      "query": "韩剧"
+    },
+    {
+      "name": "日剧",
+      "type": "tv",
+      "query": "日剧"
+    },
+    {
+      "name": "美剧",
+      "type": "tv",
+      "query": "美剧"
+    },
+    {
+      "name": "动漫",
+      "type": "anime",
+      "query": "动漫"
+    },
+    {
+      "name": "综艺",
+      "type": "variety",
+      "query": "综艺"
+    }
+  ]
+}，
     "api_site": {
         "api_1": {
             "name": "TV-1080资源",
