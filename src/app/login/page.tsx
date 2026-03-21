@@ -29,6 +29,7 @@ function VersionDisplay() {
     };
 
     checkUpdate();
+    handleSubmit();
   }, []);
 
   return (
@@ -70,7 +71,7 @@ function VersionDisplay() {
 function LoginPageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('NANPING');
   const [username, setUsername] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -94,7 +95,7 @@ function LoginPageClient() {
     setError(null);
 
     if (!password || (shouldAskUsername && !username)) return;
-
+    
     try {
       setLoading(true);
       const res = await fetch('/api/login', {
