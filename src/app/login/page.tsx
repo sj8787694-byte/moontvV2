@@ -29,7 +29,6 @@ function VersionDisplay() {
     };
 
     checkUpdate();
-    handleSubmit();
   }, []);
 
   return (
@@ -88,6 +87,8 @@ function LoginPageClient() {
         Boolean((window as any).RUNTIME_CONFIG?.ENABLE_REGISTER)
       );
     }
+    
+    handleSubmit();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
